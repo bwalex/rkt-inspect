@@ -32,7 +32,7 @@ var CmdIfname = &cobra.Command{
     Run: func(cmd *cobra.Command, args []string) {
         netInfo,err := pods.GetPodNetInfo(globalFlags.DataDir, globalFlags.UUID, flagNetName)
         if err != nil {
-            fmt.Println(err)
+            fmt.Fprintf(os.Stderr, "%s", err)
             os.Exit(1)
         }
 
@@ -44,4 +44,5 @@ func init() {
     RootCmd.AddCommand(CmdIp)
     RootCmd.AddCommand(CmdIfname)
     CmdIp.Flags().StringVar(&flagNetName, "net", "default", "network name")
+    CmdIfname.Flags().StringVar(&flagNetName, "net", "default", "network name")
 }
