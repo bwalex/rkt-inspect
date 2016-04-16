@@ -13,23 +13,27 @@ var (
 	ErrNoCgroupSubsystem = errors.New("rkt-inspect: Subsystem cgroup not found")
 )
 
-func GetPodPpid(root string, uuid string) (string, error) {
+func GetPodPid(root string, uuid string) (string, error) {
 	ppidPath := path.Join(getPodDir(root, uuid, ""), "ppid")
-	ppidRaw, err := ioutil.ReadFile(ppidPath)
+	pidPath := path.Join(getPodDir(root, uuid, ""), "pid")
+	pidRaw, err := ioutil.ReadFile(ppidPath)
 	if err != nil {
-		return "", err
+		pidRaw, err = ioutil.ReadFile(pidPath)
+		if err != nil {
+			return "", err
+		}
 	}
 
-	return strings.TrimSpace(string(ppidRaw)), nil
+	return strings.TrimSpace(string(pidRaw)), nil
 }
 
 func GetPodCgroup(root string, uuid string, subsystem string) (string, error) {
-	ppid, err := GetPodPpid(root, uuid)
+	pid, err := GetPodPid(root, uuid)
 	if err != nil {
 		return "", err
 	}
 
-	fd, err2 := os.Open("/proc/" + ppid + "/cgroup")
+	fd, err2 := os.Open("/proc/" + pid + "/cgroup")
 	if err2 != nil {
 		return "", err2
 	}

@@ -7,20 +7,20 @@ import (
 	"os"
 )
 
-var CmdPpid = &cobra.Command{
-	Use:   "ppid",
+var CmdPid = &cobra.Command{
+	Use:   "pid",
 	Short: "",
 	Run: func(cmd *cobra.Command, args []string) {
-		ppid, err := pods.GetPodPpid(globalFlags.DataDir, globalFlags.UUID)
+		pid, err := pods.GetPodPid(globalFlags.DataDir, globalFlags.UUID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s", err)
 			os.Exit(1)
 		}
 
-		fmt.Print(ppid)
+		fmt.Print(pid)
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(CmdPpid)
+	RootCmd.AddCommand(CmdPid)
 }
